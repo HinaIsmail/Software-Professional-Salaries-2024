@@ -1,0 +1,131 @@
+#  Software Professional Salaries 2024
+Salaries for software professionals in 2024 can vary widely depending on factors such as location, level of experience, specific technology stack, and the company they work for. However, I can provide some general insights based on trends up to my last update in January 2022.
+
+# Entry-Level Positions (0-2 years of experience):
+
+In the United States, entry-level software engineers typically earn between $60,000 to $90,000 annually, with variations based on location (higher in tech hubs like San Francisco, New York, Seattle) and company size.
+In other countries, such as India, entry-level salaries can range from ₹3,00,000 to ₹6,00,000 per annum.
+# Mid-Level Positions (2-5 years of experience):
+
+Mid-level software engineers in the US can expect salaries ranging from $90,000 to $120,000 annually.
+In India, mid-level salaries can range from ₹6,00,000 to ₹12,00,000 per annum.
+
+# Senior-Level Positions (5+ years of experience):
+
+Senior software engineers or tech leads can earn anywhere from $120,000 to $200,000 or more annually in the US, depending on their expertise and the companies they work for.
+In India, senior-level salaries can range from ₹12,00,000 to ₹30,00,000 per annum.
+
+# Specialized Roles:
+
+Salaries for specialized roles like machine learning engineers, data scientists, cybersecurity experts, etc., can be higher than average, often exceeding $150,000 annually in the US and varying widely based on demand and skill level.
+
+# Management and Leadership Positions:
+
+Salaries for engineering managers, directors, and executives can vary significantly based on the size and success of the company, but they often exceed $150,000 and can go well into the six-figure range.
+
+These figures are indicative and can change based on various economic factors, industry trends, and demand for specific skills. It's always a good idea to research current salary data from reliable sources such as industry reports, salary surveys, and job postings in your area for the most accurate information.
+# Software Professional Salary Dataset
+
+📌 Rating - Rating of the Company given by Employees
+
+📌 Company Name - Name of the Company
+
+📌 Job Title - Job Position or Designation
+
+📌 Salary - Total Compensation in Indian Rupee - ₹)
+
+📌 Salaries Reported - Number of times the Salary is being Reported
+
+📌 Location - Location of the Company
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.express as px
+import plotly.graph_objects as go
+from PIL import Image
+from IPython.display import Image
+from wordcloud import WordCloud, STOPWORDS
+df = pd.read_csv("../input/software-professional-salaries-2022/Software_Professional_Salaries.csv")
+df.head()
+df.shape
+df.columns
+df.info()
+df.describe()
+df.isnull().sum()
+
+df.duplicated().sum()
+
+df["Rating"].nunique()
+df["Company Name"].nunique()
+
+df["Job Title"].nunique()
+df["Salaries Reported"].nunique()
+df["Location"].unique()
+print("Mean Salary:", round(df["Salary"].mean()))
+print("Median Salary:", round(df["Salary"].median()))
+print("Highest Salary:", round(df["Salary"].max()))
+print("Lowest Salary:", round(df["Salary"].min()))
+df["Salary"].sort_values()[:5]
+df["Salary"].sort_values(ascending = False)[:5]
+df["Location"].value_counts()
+plt.figure(figsize = (20, 7))
+sns.barplot(x = df["Location"], y = df["Salaries Reported"], palette = "Set3");
+plt.figure(figsize = (20, 6))
+ax = df.Location.value_counts().plot(kind = 'bar', color = 'olivedrab')
+
+for p in ax.patches:
+    ax.annotate(int(p.get_height()), (p.get_x() + 0.25, p.get_height() + 1), ha = 'center', va = 'bottom', color = 'black')
+plt.figure(figsize = (20, 6))
+plt.ticklabel_format(style = 'plain')
+sns.barplot(x = df["Salary"], y = df["Location"], palette = "tab20");
+plt.figure(figsize = (20, 6))
+plt.xticks(rotation = 90)
+plt.ticklabel_format(style = 'plain')
+df.sort_values("Salary", axis = 0, ascending = False, inplace = True)
+sns.barplot(x = df["Company Name"][1:51],
+            y = df["Salary"][1:51],
+            palette = "nipy_spectral");
+df["Job Title"].value_counts()
+plt.figure(figsize = (20, 5))
+ax = df["Job Title"].value_counts()[:25].plot(kind = 'bar',
+                                              color = "crimson")
+
+for p in ax.patches:
+    ax.annotate(int(p.get_height()), (p.get_x() + 0.25, p.get_height() + 1), ha = 'center', va = 'bottom', color = 'black')
+df["Job Title"].value_counts()[:20].plot.pie(figsize = (7, 7),
+                                             autopct = '%1.0f%%')
+plt.title("Pie Chart")
+plt.xticks(rotation = 90)
+plt.show()
+df["Company Name"].value_counts()
+n_bins = 20
+plt.figure(figsize = (20, 5))
+df["Rating"].hist(bins = n_bins);
+fig = px.scatter(df, x = "Rating", y = "Salaries Reported", color = "Location")
+fig.show()
+new_df = pd.read_csv("../input/software-professional-salaries-2022/Salary_Dataset_with_Extra_Features.csv")
+new_df.sample(5)
+new_df["Employment Status"].value_counts()
+plt.figure(figsize = (20, 6))
+plt.grid()
+plt.ticklabel_format(style = 'plain')
+new_df.sort_values("Salary", axis = 0, ascending = False, inplace = True)
+sns.barplot(x = new_df["Employment Status"], y = new_df["Salary"], palette = "Dark2");
+new_df["Job Roles"].value_counts()
+plt.figure(figsize = (20, 6))
+col_map = plt.get_cmap('tab20')
+ax = new_df["Job Roles"].value_counts().plot(kind = 'bar',
+                                             color = col_map.colors,
+                                             rot = 0, edgecolor = 'Black',
+                                             linewidth = 2.5)
+
+for p in ax.patches:
+    ax.annotate(int(p.get_height()), (p.get_x() + 0.25, p.get_height() + 1), ha = 'center', va = 'bottom', color = 'black')
+
+plt.figure(figsize = (20, 6))
+plt.grid()
+plt.ticklabel_format(style = 'plain')
+new_df.sort_values("Salary", axis = 0, ascending = False, inplace = True)
+sns.barplot(x = new_df["Job Roles"], y = new_df["Salary"], palette = "Set3");
